@@ -147,7 +147,7 @@ const Index = () => {
                 className="w-20 h-20 object-contain"
               />
               <div>
-                <h1 className="text-2xl font-bold" style={{color: '#c71432'}}>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-[#c71432] to-[#4b877b] bg-clip-text text-transparent">
                   Совет Обучающихся
                 </h1>
                 <p className="text-sm text-muted-foreground">Твой голос имеет значение</p>
@@ -224,7 +224,19 @@ const Index = () => {
                             </div>
                           </div>
                           <div className="flex gap-2 items-center">
-                            <Progress value={percentage} className="flex-1" />
+                            <div className="flex-1 relative h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className="absolute h-full transition-all duration-300"
+                                style={{
+                                  width: `${percentage}%`,
+                                  background: userVotes[`${poll.id}-${index}`] === 'like' 
+                                    ? '#10b981' 
+                                    : userVotes[`${poll.id}-${index}`] === 'dislike' 
+                                      ? '#ef4444'
+                                      : 'linear-gradient(to right, #c71432, #4b877b)'
+                                }}
+                              />
+                            </div>
                             <div className="flex gap-1 shrink-0">
                               <Button 
                                 size="sm" 
