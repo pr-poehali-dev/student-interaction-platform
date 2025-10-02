@@ -135,10 +135,10 @@ const Index = () => {
                 className="w-20 h-20 object-contain"
               />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
                   Совет Обучающихся
                 </h1>
-                <p className="text-sm text-gray-600">Твой голос имеет значение</p>
+                <p className="text-sm text-muted-foreground">Твой голос имеет значение</p>
               </div>
             </div>
             <nav className="hidden md:flex gap-2">
