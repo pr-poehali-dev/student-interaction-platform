@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "name": "Submit feedback",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "type": "feedback",
+        "name": "Тестовый пользователь",
+        "email": "test@example.com",
+        "message": "Тестовое сообщение"
+      },
+      "expectedStatus": 201
+    },
+    {
+      "name": "Get all feedback",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ]
+}

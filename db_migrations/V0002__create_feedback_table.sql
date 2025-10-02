@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS feedback (
+    id SERIAL PRIMARY KEY,
+    type VARCHAR(50) NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    email VARCHAR(200),
+    title VARCHAR(500),
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

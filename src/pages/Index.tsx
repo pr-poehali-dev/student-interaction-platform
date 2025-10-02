@@ -40,6 +40,7 @@ interface NewsPost {
 }
 
 const API_URL = 'https://functions.poehali.dev/bb9dfb4e-378b-4448-87a4-5214968681af';
+const FEEDBACK_API_URL = 'https://functions.poehali.dev/cffa3fe8-9211-401e-b821-d16d515b8f03';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -51,6 +52,18 @@ const Index = () => {
   const [newNewsContent, setNewNewsContent] = useState('');
   const [newNewsAuthor, setNewNewsAuthor] = useState('');
   const [isLoadingNews, setIsLoadingNews] = useState(false);
+  
+  const [feedbackName, setFeedbackName] = useState('');
+  const [feedbackEmail, setFeedbackEmail] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  
+  const [initiativeTitle, setInitiativeTitle] = useState('');
+  const [initiativeName, setInitiativeName] = useState('');
+  const [initiativeMessage, setInitiativeMessage] = useState('');
+  
+  const [questionName, setQuestionName] = useState('');
+  const [questionEmail, setQuestionEmail] = useState('');
+  const [questionMessage, setQuestionMessage] = useState('');
 
   useEffect(() => {
     fetchNews();
@@ -106,16 +119,85 @@ const Index = () => {
     { id: 3, title: '500+ активных участников', description: 'Совет обучающихся объединил более 500 студентов', date: 'Октябрь 2025' }
   ]);
 
-  const handleSubmitFeedback = () => {
-    alert('Спасибо за отзыв! Ваше мнение важно для нас.');
+  const handleSubmitFeedback = async (formData: { name: string; email: string; message: string }) => {
+    try {
+      const response = await fetch(FEEDBACK_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'feedback',
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        })
+      });
+      
+      if (response.ok) {
+        alert('Спасибо за отзыв! Ваше мнение важно для нас.');
+        return true;
+      } else {
+        alert('Ошибка при отправке отзыва');
+        return false;
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при отправке отзыва');
+      return false;
+    }
   };
 
-  const handleSubmitInitiative = () => {
-    alert('Инициатива отправлена! Мы рассмотрим ваше предложение.');
+  const handleSubmitInitiative = async (formData: { title: string; name: string; message: string }) => {
+    try {
+      const response = await fetch(FEEDBACK_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'initiative',
+          name: formData.name,
+          title: formData.title,
+          message: formData.message
+        })
+      });
+      
+      if (response.ok) {
+        alert('Инициатива отправлена! Мы рассмотрим ваше предложение.');
+        return true;
+      } else {
+        alert('Ошибка при отправке инициативы');
+        return false;
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при отправке инициативы');
+      return false;
+    }
   };
 
-  const handleSubmitQuestion = () => {
-    alert('Вопрос отправлен! Мы ответим вам на email.');
+  const handleSubmitQuestion = async (formData: { name: string; email: string; message: string }) => {
+    try {
+      const response = await fetch(FEEDBACK_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'question',
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        })
+      });
+      
+      if (response.ok) {
+        alert('Вопрос отправлен! Мы ответим вам на email.');
+        return true;
+      } else {
+        alert('Ошибка при отправке вопроса');
+        return false;
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при отправке вопроса');
+      return false;
+    }
   };
 
   const handleAddNews = async () => {
@@ -581,14 +663,38 @@ const Index = () => {
                 </TabsList>
                 <TabsContent value="feedback" className="space-y-4 mt-4">
                   <div>
-                    <Input placeholder="Ваше имя" className="mb-3" />
-                    <Input type="email" placeholder="Email (необязательно)" className="mb-3" />
+                    <Input 
+                      placeholder="Ваше имя" 
+                      className="mb-3" 
+                      value={feedbackName}
+                      onChange={(e) => setFeedbackName(e.target.value)}
+                    />
+                    <Input 
+                      type="email" 
+                      placeholder="Email (необязательно)" 
+                      className="mb-3" 
+                      value={feedbackEmail}
+                      onChange={(e) => setFeedbackEmail(e.target.value)}
+                    />
                     <Textarea 
                       placeholder="Расскажите, что можно улучшить в работе совета или учебного процесса..." 
                       rows={4}
                       className="mb-3"
+                      value={feedbackMessage}
+                      onChange={(e) => setFeedbackMessage(e.target.value)}
                     />
-                    <Button className="w-full hover:opacity-90" style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} onClick={handleSubmitFeedback}>
+                    <Button 
+                      className="w-full hover:opacity-90" 
+                      style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} 
+                      onClick={async () => {
+                        const success = await handleSubmitFeedback({ name: feedbackName, email: feedbackEmail, message: feedbackMessage });
+                        if (success) {
+                          setFeedbackName('');
+                          setFeedbackEmail('');
+                          setFeedbackMessage('');
+                        }
+                      }}
+                    >
                       <Icon name="Send" size={16} className="mr-2" />
                       Отправить отзыв
                     </Button>
@@ -596,14 +702,37 @@ const Index = () => {
                 </TabsContent>
                 <TabsContent value="initiative" className="space-y-4 mt-4">
                   <div>
-                    <Input placeholder="Название инициативы" className="mb-3" />
-                    <Input placeholder="Ваше имя" className="mb-3" />
+                    <Input 
+                      placeholder="Название инициативы" 
+                      className="mb-3" 
+                      value={initiativeTitle}
+                      onChange={(e) => setInitiativeTitle(e.target.value)}
+                    />
+                    <Input 
+                      placeholder="Ваше имя" 
+                      className="mb-3" 
+                      value={initiativeName}
+                      onChange={(e) => setInitiativeName(e.target.value)}
+                    />
                     <Textarea 
                       placeholder="Опишите вашу идею и как она улучшит жизнь студентов..." 
                       rows={4}
                       className="mb-3"
+                      value={initiativeMessage}
+                      onChange={(e) => setInitiativeMessage(e.target.value)}
                     />
-                    <Button className="w-full hover:opacity-90" style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} onClick={handleSubmitInitiative}>
+                    <Button 
+                      className="w-full hover:opacity-90" 
+                      style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} 
+                      onClick={async () => {
+                        const success = await handleSubmitInitiative({ title: initiativeTitle, name: initiativeName, message: initiativeMessage });
+                        if (success) {
+                          setInitiativeTitle('');
+                          setInitiativeName('');
+                          setInitiativeMessage('');
+                        }
+                      }}
+                    >
                       <Icon name="Sparkles" size={16} className="mr-2" />
                       Предложить инициативу
                     </Button>
@@ -611,14 +740,38 @@ const Index = () => {
                 </TabsContent>
                 <TabsContent value="question" className="space-y-4 mt-4">
                   <div>
-                    <Input placeholder="Ваше имя" className="mb-3" />
-                    <Input type="email" placeholder="Email для ответа" className="mb-3" />
+                    <Input 
+                      placeholder="Ваше имя" 
+                      className="mb-3" 
+                      value={questionName}
+                      onChange={(e) => setQuestionName(e.target.value)}
+                    />
+                    <Input 
+                      type="email" 
+                      placeholder="Email для ответа" 
+                      className="mb-3" 
+                      value={questionEmail}
+                      onChange={(e) => setQuestionEmail(e.target.value)}
+                    />
                     <Textarea 
                       placeholder="Задайте ваш вопрос..." 
                       rows={4}
                       className="mb-3"
+                      value={questionMessage}
+                      onChange={(e) => setQuestionMessage(e.target.value)}
                     />
-                    <Button className="w-full hover:opacity-90" style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} onClick={handleSubmitQuestion}>
+                    <Button 
+                      className="w-full hover:opacity-90" 
+                      style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} 
+                      onClick={async () => {
+                        const success = await handleSubmitQuestion({ name: questionName, email: questionEmail, message: questionMessage });
+                        if (success) {
+                          setQuestionName('');
+                          setQuestionEmail('');
+                          setQuestionMessage('');
+                        }
+                      }}
+                    >
                       <Icon name="Send" size={16} className="mr-2" />
                       Задать вопрос
                     </Button>
