@@ -109,9 +109,11 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 via-purple-500 to-emerald-500 flex items-center justify-center">
-                <Icon name="Users" className="text-white" size={24} />
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/files/55ad8279-97c3-41a8-b8d3-c5dfed336cac.jpg" 
+                alt="Совет Обучающихся"
+                className="w-16 h-16 object-contain"
+              />
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
                   Совет Обучающихся
