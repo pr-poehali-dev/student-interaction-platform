@@ -31,8 +31,30 @@ interface Achievement {
   date: string;
 }
 
+interface NewsPost {
+  id: number;
+  title: string;
+  content: string;
+  date: string;
+  author: string;
+}
+
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [news, setNews] = useState<NewsPost[]>([
+    {
+      id: 1,
+      title: 'Добро пожаловать на сайт Совета Обучающихся!',
+      content: 'Мы рады приветствовать вас на обновленном сайте. Здесь вы можете следить за новостями, участвовать в голосованиях и предлагать свои идеи.',
+      date: '2025-10-01',
+      author: 'Совет Обучающихся'
+    }
+  ]);
+  const [isAddingNews, setIsAddingNews] = useState(false);
+  const [editingNewsId, setEditingNewsId] = useState<number | null>(null);
+  const [newNewsTitle, setNewNewsTitle] = useState('');
+  const [newNewsContent, setNewNewsContent] = useState('');
+  const [newNewsAuthor, setNewNewsAuthor] = useState('');
   const [polls, setPolls] = useState<Poll[]>([
     {
       id: 1,
@@ -81,6 +103,71 @@ const Index = () => {
 
   const handleSubmitQuestion = () => {
     alert('Вопрос отправлен! Мы ответим вам на email.');
+  };
+
+  const handleAddNews = () => {
+    if (!newNewsTitle.trim() || !newNewsContent.trim() || !newNewsAuthor.trim()) {
+      alert('Заполните все поля!');
+      return;
+    }
+    
+    const newPost: NewsPost = {
+      id: Date.now(),
+      title: newNewsTitle,
+      content: newNewsContent,
+      author: newNewsAuthor,
+      date: new Date().toISOString().split('T')[0]
+    };
+    
+    setNews([newPost, ...news]);
+    setNewNewsTitle('');
+    setNewNewsContent('');
+    setNewNewsAuthor('');
+    setIsAddingNews(false);
+  };
+
+  const handleEditNews = (id: number) => {
+    const newsToEdit = news.find(n => n.id === id);
+    if (newsToEdit) {
+      setNewNewsTitle(newsToEdit.title);
+      setNewNewsContent(newsToEdit.content);
+      setNewNewsAuthor(newsToEdit.author);
+      setEditingNewsId(id);
+      setIsAddingNews(true);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (!newNewsTitle.trim() || !newNewsContent.trim() || !newNewsAuthor.trim()) {
+      alert('Заполните все поля!');
+      return;
+    }
+    
+    setNews(news.map(n => 
+      n.id === editingNewsId 
+        ? { ...n, title: newNewsTitle, content: newNewsContent, author: newNewsAuthor }
+        : n
+    ));
+    
+    setNewNewsTitle('');
+    setNewNewsContent('');
+    setNewNewsAuthor('');
+    setEditingNewsId(null);
+    setIsAddingNews(false);
+  };
+
+  const handleDeleteNews = (id: number) => {
+    if (confirm('Удалить эту новость?')) {
+      setNews(news.filter(n => n.id !== id));
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setNewNewsTitle('');
+    setNewNewsContent('');
+    setNewNewsAuthor('');
+    setEditingNewsId(null);
+    setIsAddingNews(false);
   };
 
   const handleVote = (pollId: number, optionIndex: number, type: 'like' | 'dislike') => {
@@ -191,6 +278,104 @@ const Index = () => {
             <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
           </div>
         </section>
+
+        {activeTab === 'новости' && (
+          <section className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-3xl font-bold">Новости совета</h3>
+              <Button 
+                onClick={() => setIsAddingNews(true)} 
+                style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}}
+                className="text-white hover:opacity-90"
+              >
+                <Icon name="Plus" className="mr-2" size={16} />
+                Добавить новость
+              </Button>
+            </div>
+
+            {isAddingNews && (
+              <Card className="mb-6 border-2">
+                <CardHeader className="bg-gradient-to-r from-[#fde8ec] to-[#e6f4f1]">
+                  <CardTitle>{editingNewsId ? 'Редактировать новость' : 'Новая новость'}</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6 space-y-4">
+                  <Input 
+                    placeholder="Заголовок новости" 
+                    value={newNewsTitle}
+                    onChange={(e) => setNewNewsTitle(e.target.value)}
+                  />
+                  <Textarea 
+                    placeholder="Текст новости..." 
+                    rows={6}
+                    value={newNewsContent}
+                    onChange={(e) => setNewNewsContent(e.target.value)}
+                  />
+                  <Input 
+                    placeholder="Автор" 
+                    value={newNewsAuthor}
+                    onChange={(e) => setNewNewsAuthor(e.target.value)}
+                  />
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={editingNewsId ? handleSaveEdit : handleAddNews}
+                      style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}}
+                      className="text-white hover:opacity-90"
+                    >
+                      <Icon name="Check" className="mr-2" size={16} />
+                      {editingNewsId ? 'Сохранить' : 'Опубликовать'}
+                    </Button>
+                    <Button variant="outline" onClick={handleCancelEdit}>
+                      Отмена
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="grid gap-6">
+              {news.map((post) => (
+                <Card key={post.id} className="overflow-hidden border-2 hover:shadow-xl transition-all">
+                  <CardHeader className="bg-gradient-to-r from-[#fde8ec] to-[#e6f4f1]">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-xl mb-2">{post.title}</CardTitle>
+                        <div className="flex gap-4 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Icon name="Calendar" size={14} />
+                            {new Date(post.date).toLocaleDateString('ru-RU')}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Icon name="User" size={14} />
+                            {post.author}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditNews(post.id)}
+                        >
+                          <Icon name="Edit" size={16} />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleDeleteNews(post.id)}
+                        >
+                          <Icon name="Trash2" size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <p className="text-muted-foreground whitespace-pre-wrap">{post.content}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">
