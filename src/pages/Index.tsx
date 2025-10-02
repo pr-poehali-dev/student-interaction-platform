@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -39,22 +39,34 @@ interface NewsPost {
   author: string;
 }
 
+const API_URL = 'https://functions.poehali.dev/bb9dfb4e-378b-4448-87a4-5214968681af';
+
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
-  const [news, setNews] = useState<NewsPost[]>([
-    {
-      id: 1,
-      title: 'Добро пожаловать на сайт Совета Обучающихся!',
-      content: 'Мы рады приветствовать вас на обновленном сайте. Здесь вы можете следить за новостями, участвовать в голосованиях и предлагать свои идеи.',
-      date: '2025-10-01',
-      author: 'Совет Обучающихся'
-    }
-  ]);
+  const [news, setNews] = useState<NewsPost[]>([]);
   const [isAddingNews, setIsAddingNews] = useState(false);
   const [editingNewsId, setEditingNewsId] = useState<number | null>(null);
   const [newNewsTitle, setNewNewsTitle] = useState('');
   const [newNewsContent, setNewNewsContent] = useState('');
   const [newNewsAuthor, setNewNewsAuthor] = useState('');
+  const [isLoadingNews, setIsLoadingNews] = useState(false);
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  const fetchNews = async () => {
+    setIsLoadingNews(true);
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setNews(data.news || []);
+    } catch (error) {
+      console.error('Ошибка загрузки новостей:', error);
+    } finally {
+      setIsLoadingNews(false);
+    }
+  };
   const [polls, setPolls] = useState<Poll[]>([
     {
       id: 1,
@@ -105,25 +117,36 @@ const Index = () => {
     alert('Вопрос отправлен! Мы ответим вам на email.');
   };
 
-  const handleAddNews = () => {
+  const handleAddNews = async () => {
     if (!newNewsTitle.trim() || !newNewsContent.trim() || !newNewsAuthor.trim()) {
       alert('Заполните все поля!');
       return;
     }
     
-    const newPost: NewsPost = {
-      id: Date.now(),
-      title: newNewsTitle,
-      content: newNewsContent,
-      author: newNewsAuthor,
-      date: new Date().toISOString().split('T')[0]
-    };
-    
-    setNews([newPost, ...news]);
-    setNewNewsTitle('');
-    setNewNewsContent('');
-    setNewNewsAuthor('');
-    setIsAddingNews(false);
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newNewsTitle,
+          content: newNewsContent,
+          author: newNewsAuthor
+        })
+      });
+      
+      if (response.ok) {
+        await fetchNews();
+        setNewNewsTitle('');
+        setNewNewsContent('');
+        setNewNewsAuthor('');
+        setIsAddingNews(false);
+      } else {
+        alert('Ошибка при добавлении новости');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при добавлении новости');
+    }
   };
 
   const handleEditNews = (id: number) => {
@@ -137,28 +160,56 @@ const Index = () => {
     }
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!newNewsTitle.trim() || !newNewsContent.trim() || !newNewsAuthor.trim()) {
       alert('Заполните все поля!');
       return;
     }
     
-    setNews(news.map(n => 
-      n.id === editingNewsId 
-        ? { ...n, title: newNewsTitle, content: newNewsContent, author: newNewsAuthor }
-        : n
-    ));
-    
-    setNewNewsTitle('');
-    setNewNewsContent('');
-    setNewNewsAuthor('');
-    setEditingNewsId(null);
-    setIsAddingNews(false);
+    try {
+      const response = await fetch(API_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingNewsId,
+          title: newNewsTitle,
+          content: newNewsContent,
+          author: newNewsAuthor
+        })
+      });
+      
+      if (response.ok) {
+        await fetchNews();
+        setNewNewsTitle('');
+        setNewNewsContent('');
+        setNewNewsAuthor('');
+        setEditingNewsId(null);
+        setIsAddingNews(false);
+      } else {
+        alert('Ошибка при редактировании новости');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при редактировании новости');
+    }
   };
 
-  const handleDeleteNews = (id: number) => {
+  const handleDeleteNews = async (id: number) => {
     if (confirm('Удалить эту новость?')) {
-      setNews(news.filter(n => n.id !== id));
+      try {
+        const response = await fetch(`${API_URL}?id=${id}`, {
+          method: 'DELETE'
+        });
+        
+        if (response.ok) {
+          await fetchNews();
+        } else {
+          alert('Ошибка при удалении новости');
+        }
+      } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка при удалении новости');
+      }
     }
   };
 
@@ -332,8 +383,17 @@ const Index = () => {
               </Card>
             )}
 
-            <div className="grid gap-6">
-              {news.map((post) => (
+            {isLoadingNews ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Загрузка новостей...</p>
+              </div>
+            ) : news.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Пока нет новостей. Добавьте первую!</p>
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {news.map((post) => (
                 <Card key={post.id} className="overflow-hidden border-2 hover:shadow-xl transition-all">
                   <CardHeader className="bg-gradient-to-r from-[#fde8ec] to-[#e6f4f1]">
                     <div className="flex items-start justify-between">
@@ -372,8 +432,9 @@ const Index = () => {
                     <p className="text-muted-foreground whitespace-pre-wrap">{post.content}</p>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
 
