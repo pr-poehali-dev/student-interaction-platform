@@ -305,24 +305,6 @@ const Index = () => {
         </section>
 
         <section className="mb-12">
-          <h3 className="text-3xl font-bold mb-6">Наши достижения</h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            {achievements.map((achievement) => (
-              <Card key={achievement.id} className="overflow-hidden border-2 hover:shadow-xl transition-all">
-                <div className="h-32 flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}>
-                  <Icon name="Trophy" size={48} className="text-white" />
-                </div>
-                <CardHeader>
-                  <Badge variant="outline" className="w-fit mb-2">{achievement.date}</Badge>
-                  <CardTitle className="text-lg">{achievement.title}</CardTitle>
-                  <CardDescription>{achievement.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-12">
           <Card className="overflow-hidden border-2">
             <CardHeader className="bg-gradient-to-r from-[#fde8ec] to-[#e6f4f1]">
               <CardTitle className="text-2xl flex items-center gap-2">
