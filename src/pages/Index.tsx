@@ -128,15 +128,15 @@ const Index = () => {
 
   const getEventColor = (type: string) => {
     switch(type) {
-      case 'meeting': return 'from-[#c71432] to-[#9a1028]';
-      case 'initiative': return 'from-[#c71432] to-[#9a1028]';
-      case 'event': return 'from-[#c71432] to-[#9a1028]';
+      case 'meeting': return 'from-[#c71432] to-[#4b877b]';
+      case 'initiative': return 'from-[#c71432] to-[#4b877b]';
+      case 'event': return 'from-[#c71432] to-[#4b877b]';
       default: return 'from-gray-500 to-gray-600';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-gray-50">
+    <div className="min-h-screen" style={{background: 'linear-gradient(to bottom right, #fde8ec, #e6f4f1)'}}>
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -171,7 +171,7 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12 animate-fade-in">
-          <div className="relative overflow-hidden rounded-3xl p-12 text-white" style={{background: 'linear-gradient(to bottom right, #c71432, #9a1028)'}}>
+          <div className="relative overflow-hidden rounded-3xl p-12 text-white" style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}>
             <div className="relative z-10 max-w-2xl">
               <h2 className="text-5xl font-bold mb-4">Создаём будущее вместе</h2>
               <p className="text-xl mb-6 opacity-90">
@@ -203,7 +203,7 @@ const Index = () => {
           <div className="grid md:grid-cols-2 gap-6">
             {polls.map((poll) => (
               <Card key={poll.id} className="overflow-hidden border-2 hover:shadow-xl transition-all animate-scale-in">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-red-100">
+                <CardHeader className="bg-gradient-to-r from-[#fde8ec] to-[#e6f4f1]">
                   <CardTitle className="flex items-center gap-2">
                     <Icon name="Vote" size={24} style={{color: '#c71432'}} />
                     {poll.question}
@@ -309,7 +309,7 @@ const Index = () => {
 
         <section className="mb-12">
           <Card className="overflow-hidden border-2">
-            <CardHeader className="bg-gradient-to-r from-red-50 to-red-100">
+            <CardHeader className="bg-gradient-to-r from-[#fde8ec] to-[#e6f4f1]">
               <CardTitle className="text-2xl flex items-center gap-2">
                 <Icon name="MessageSquare" size={28} style={{color: '#c71432'}} />
                 Обратная связь
@@ -341,7 +341,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full hover:opacity-90" style={{background: '#c71432'}} onClick={handleSubmitFeedback}>
+                    <Button className="w-full hover:opacity-90" style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} onClick={handleSubmitFeedback}>
                       <Icon name="Send" size={16} className="mr-2" />
                       Отправить отзыв
                     </Button>
@@ -356,7 +356,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full hover:opacity-90" style={{background: '#c71432'}} onClick={handleSubmitInitiative}>
+                    <Button className="w-full hover:opacity-90" style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} onClick={handleSubmitInitiative}>
                       <Icon name="Sparkles" size={16} className="mr-2" />
                       Предложить инициативу
                     </Button>
@@ -371,7 +371,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full hover:opacity-90" style={{background: '#c71432'}} onClick={handleSubmitQuestion}>
+                    <Button className="w-full hover:opacity-90" style={{background: 'linear-gradient(to right, #c71432, #4b877b)'}} onClick={handleSubmitQuestion}>
                       <Icon name="Send" size={16} className="mr-2" />
                       Задать вопрос
                     </Button>
