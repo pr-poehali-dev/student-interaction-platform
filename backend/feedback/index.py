@@ -3,6 +3,54 @@ import os
 from typing import Dict, Any
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_email_notification(feedback_type: str, name: str, email: str, title: str, message: str) -> None:
+    '''
+    Отправляет уведомление на почту maksimenkov012@mail.ru
+    '''
+    api_key = os.environ.get('EMAIL_API_KEY')
+    if not api_key:
+        return
+    
+    type_names = {
+        'feedback': 'Отзыв',
+        'initiative': 'Инициатива',
+        'question': 'Вопрос'
+    }
+    type_name = type_names.get(feedback_type, feedback_type)
+    
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = f'Новое сообщение: {type_name}'
+    msg['From'] = 'noreply@poehali.dev'
+    msg['To'] = 'maksimenkov012@mail.ru'
+    
+    html_content = f'''
+    <html>
+      <body style="font-family: Arial, sans-serif;">
+        <h2 style="color: #2563eb;">Новое сообщение: {type_name}</h2>
+        <p><strong>Имя:</strong> {name}</p>
+        <p><strong>Email:</strong> {email}</p>
+        <p><strong>Тема:</strong> {title if title else 'Не указана'}</p>
+        <hr>
+        <p><strong>Сообщение:</strong></p>
+        <p>{message}</p>
+      </body>
+    </html>
+    '''
+    
+    html_part = MIMEText(html_content, 'html')
+    msg.attach(html_part)
+    
+    try:
+        with smtplib.SMTP('smtp.sendgrid.net', 587) as server:
+            server.starttls()
+            server.login('apikey', api_key)
+            server.send_message(msg)
+    except Exception:
+        pass
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     '''
@@ -89,6 +137,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 )
                 new_item = cur.fetchone()
                 conn.commit()
+                
+                send_email_notification(feedback_type, name, email, title, message)
                 
                 return {
                     'statusCode': 201,
