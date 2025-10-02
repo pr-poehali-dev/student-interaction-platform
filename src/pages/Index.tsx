@@ -128,15 +128,15 @@ const Index = () => {
 
   const getEventColor = (type: string) => {
     switch(type) {
-      case 'meeting': return 'from-pink-500 to-rose-500';
-      case 'initiative': return 'from-indigo-500 to-purple-500';
-      case 'event': return 'from-emerald-500 to-teal-500';
+      case 'meeting': return 'from-[#c71432] to-[#9a1028]';
+      case 'initiative': return 'from-[#c71432] to-[#9a1028]';
+      case 'event': return 'from-[#c71432] to-[#9a1028]';
       default: return 'from-gray-500 to-gray-600';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-gray-50">
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -147,7 +147,7 @@ const Index = () => {
                 className="w-20 h-20 object-contain"
               />
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold" style={{color: '#c71432'}}>
                   Совет Обучающихся
                 </h1>
                 <p className="text-sm text-muted-foreground">Твой голос имеет значение</p>
@@ -171,14 +171,14 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12 animate-fade-in">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-500 via-purple-500 to-emerald-500 p-12 text-white">
+          <div className="relative overflow-hidden rounded-3xl p-12 text-white" style={{background: 'linear-gradient(to bottom right, #c71432, #9a1028)'}}>
             <div className="relative z-10 max-w-2xl">
               <h2 className="text-5xl font-bold mb-4">Создаём будущее вместе</h2>
               <p className="text-xl mb-6 opacity-90">
                 Присоединяйся к сообществу активных студентов. Предлагай идеи, голосуй за изменения и участвуй в жизни учебного заведения.
               </p>
               <div className="flex gap-4">
-                <Button size="lg" variant="secondary" className="bg-white text-purple-600 hover:bg-gray-100" onClick={() => setActiveTab('initiative')}>
+                <Button size="lg" variant="secondary" className="bg-white hover:bg-gray-100" style={{color: '#c71432'}} onClick={() => setActiveTab('initiative')}>
                   <Icon name="Sparkles" className="mr-2" size={20} />
                   Подать инициативу
                 </Button>
@@ -203,9 +203,9 @@ const Index = () => {
           <div className="grid md:grid-cols-2 gap-6">
             {polls.map((poll) => (
               <Card key={poll.id} className="overflow-hidden border-2 hover:shadow-xl transition-all animate-scale-in">
-                <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-red-100">
                   <CardTitle className="flex items-center gap-2">
-                    <Icon name="Vote" size={24} className="text-purple-600" />
+                    <Icon name="Vote" size={24} style={{color: '#c71432'}} />
                     {poll.question}
                   </CardTitle>
                   <CardDescription>Всего голосов: {poll.totalVotes}</CardDescription>
@@ -309,9 +309,9 @@ const Index = () => {
 
         <section className="mb-12">
           <Card className="overflow-hidden border-2">
-            <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50">
+            <CardHeader className="bg-gradient-to-r from-red-50 to-red-100">
               <CardTitle className="text-2xl flex items-center gap-2">
-                <Icon name="MessageSquare" size={28} className="text-emerald-600" />
+                <Icon name="MessageSquare" size={28} style={{color: '#c71432'}} />
                 Обратная связь
               </CardTitle>
               <CardDescription>Поделись своим мнением, предложи улучшения или задай вопрос</CardDescription>
@@ -341,7 +341,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600" onClick={handleSubmitFeedback}>
+                    <Button className="w-full hover:opacity-90" style={{background: '#c71432'}} onClick={handleSubmitFeedback}>
                       <Icon name="Send" size={16} className="mr-2" />
                       Отправить отзыв
                     </Button>
@@ -356,7 +356,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600" onClick={handleSubmitInitiative}>
+                    <Button className="w-full hover:opacity-90" style={{background: '#c71432'}} onClick={handleSubmitInitiative}>
                       <Icon name="Sparkles" size={16} className="mr-2" />
                       Предложить инициативу
                     </Button>
@@ -371,7 +371,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600" onClick={handleSubmitQuestion}>
+                    <Button className="w-full hover:opacity-90" style={{background: '#c71432'}} onClick={handleSubmitQuestion}>
                       <Icon name="Send" size={16} className="mr-2" />
                       Задать вопрос
                     </Button>
