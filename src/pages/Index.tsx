@@ -417,9 +417,13 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}>
+                  <a 
+                    href="mailto:maksimenkov012@mail.ru" 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition-opacity" 
+                    style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}
+                  >
                     <Icon name="Mail" size={20} className="text-white" />
-                  </div>
+                  </a>
                   <div>
                     <p className="font-semibold mb-1">Email</p>
                     <a href="mailto:maksimenkov012@mail.ru" className="text-sm text-muted-foreground hover:text-primary transition-colors">maksimenkov012@mail.ru</a>
