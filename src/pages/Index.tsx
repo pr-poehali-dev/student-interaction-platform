@@ -59,7 +59,7 @@ const Index = () => {
   const [userVotes, setUserVotes] = useState<{ [key: string]: 'like' | 'dislike' | null }>({});
 
   const [events] = useState<Event[]>([
-    { id: 1, title: 'Собрание совета обучающихся', date: '2025-10-05', time: '15:00', location: 'Аудитория 301', type: 'meeting' },
+    { id: 1, title: 'Собрание совета обучающихся', date: '2025-10-09', time: '16:00', location: '2 корпус, 3 этаж, аудитория 312', type: 'meeting' },
     { id: 2, title: 'День открытых дверей', date: '2025-10-10', time: '10:00', location: 'Главный холл', type: 'event' },
     { id: 3, title: 'Инициатива "Зеленый кампус"', date: '2025-10-12', time: '14:00', location: 'Территория', type: 'initiative' },
     { id: 4, title: 'Студенческая конференция', date: '2025-10-18', time: '09:00', location: 'Актовый зал', type: 'event' }
