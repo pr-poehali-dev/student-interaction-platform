@@ -43,6 +43,7 @@ const API_URL = 'https://functions.poehali.dev/bb9dfb4e-378b-4448-87a4-521496868
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [feedbackTab, setFeedbackTab] = useState('feedback');
   const [news, setNews] = useState<NewsPost[]>([]);
   const [isAddingNews, setIsAddingNews] = useState(false);
   const [editingNewsId, setEditingNewsId] = useState<number | null>(null);
@@ -316,7 +317,10 @@ const Index = () => {
                 Присоединяйся к сообществу активных студентов. Предлагай идеи, голосуй за изменения и участвуй в жизни учебного заведения.
               </p>
               <div className="flex gap-4">
-                <Button size="lg" variant="secondary" className="bg-white hover:bg-gray-100" style={{color: '#c71432'}} onClick={() => setActiveTab('initiative')}>
+                <Button size="lg" variant="secondary" className="bg-white hover:bg-gray-100" style={{color: '#c71432'}} onClick={() => {
+                  setFeedbackTab('initiative');
+                  document.getElementById('feedback-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}>
                   <Icon name="Sparkles" className="mr-2" size={20} />
                   Подать инициативу
                 </Button>
@@ -550,7 +554,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="mb-12">
+        <section className="mb-12" id="feedback-section">
           <Card className="overflow-hidden border-2">
             <CardHeader className="bg-gradient-to-r from-[#fde8ec] to-[#e6f4f1]">
               <CardTitle className="text-2xl flex items-center gap-2">
@@ -560,7 +564,7 @@ const Index = () => {
               <CardDescription>Поделись своим мнением, предложи улучшения или задай вопрос</CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
-              <Tabs defaultValue="feedback" className="w-full">
+              <Tabs value={feedbackTab} onValueChange={setFeedbackTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="feedback">
                     <Icon name="MessageCircle" size={16} className="mr-2" />
