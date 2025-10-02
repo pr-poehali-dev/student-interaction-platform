@@ -3,52 +3,45 @@ import os
 from typing import Dict, Any
 import psycopg2
 from psycopg2.extras import RealDictCursor
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import requests
 
-def send_email_notification(feedback_type: str, name: str, email: str, title: str, message: str) -> None:
+def send_telegram_notification(feedback_type: str, name: str, email: str, title: str, message: str) -> None:
     '''
-    Отправляет уведомление на почту maksimenkov012@mail.ru
+    Отправляет уведомление в Telegram
     '''
-    api_key = os.environ.get('EMAIL_API_KEY')
-    if not api_key:
+    bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+    chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+    
+    if not bot_token or not chat_id:
         return
     
     type_names = {
-        'feedback': 'Отзыв',
-        'initiative': 'Инициатива',
-        'question': 'Вопрос'
+        'feedback': '📝 Отзыв',
+        'initiative': '💡 Инициатива',
+        'question': '❓ Вопрос'
     }
     type_name = type_names.get(feedback_type, feedback_type)
     
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = f'Новое сообщение: {type_name}'
-    msg['From'] = 'noreply@poehali.dev'
-    msg['To'] = 'maksimenkov012@mail.ru'
+    telegram_message = f'''
+🔔 <b>{type_name}</b>
+
+👤 <b>Имя:</b> {name}
+📧 <b>Email:</b> {email}
+📌 <b>Тема:</b> {title if title else 'Не указана'}
+
+💬 <b>Сообщение:</b>
+{message}
+'''
     
-    html_content = f'''
-    <html>
-      <body style="font-family: Arial, sans-serif;">
-        <h2 style="color: #2563eb;">Новое сообщение: {type_name}</h2>
-        <p><strong>Имя:</strong> {name}</p>
-        <p><strong>Email:</strong> {email}</p>
-        <p><strong>Тема:</strong> {title if title else 'Не указана'}</p>
-        <hr>
-        <p><strong>Сообщение:</strong></p>
-        <p>{message}</p>
-      </body>
-    </html>
-    '''
-    
-    html_part = MIMEText(html_content, 'html')
-    msg.attach(html_part)
+    url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+    payload = {
+        'chat_id': chat_id,
+        'text': telegram_message,
+        'parse_mode': 'HTML'
+    }
     
     try:
-        with smtplib.SMTP('smtp.sendgrid.net', 587) as server:
-            server.starttls()
-            server.login('apikey', api_key)
-            server.send_message(msg)
+        requests.post(url, json=payload, timeout=5)
     except Exception:
         pass
 
@@ -138,7 +131,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 new_item = cur.fetchone()
                 conn.commit()
                 
-                send_email_notification(feedback_type, name, email, title, message)
+                send_telegram_notification(feedback_type, name, email, title, message)
                 
                 return {
                     'statusCode': 201,
