@@ -61,7 +61,7 @@ const Index = () => {
   const [events] = useState<Event[]>([
     { id: 1, title: 'Собрание совета обучающихся', date: '2025-10-09', time: '16:00', location: '2 корпус, 3 этаж, аудитория 312', type: 'meeting' },
     { id: 2, title: 'Пресс-служба', date: '-', time: '-', location: '-', type: 'event' },
-    { id: 3, title: 'Инициатива "Зеленый кампус"', date: '-', time: '-', location: '-', type: 'initiative' },
+    { id: 3, title: '-', date: '-', time: '-', location: '-', type: 'initiative' },
     { id: 4, title: 'Студенческая конференция', date: '-', time: '-', location: '-', type: 'event' }
   ]);
 
