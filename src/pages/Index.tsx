@@ -213,14 +213,17 @@ const Index = () => {
                 <CardContent className="pt-6">
                   <div className="space-y-4">
                     {poll.options.map((option, index) => {
-                      const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes) * 100 : 0;
+                      const totalOptionVotes = option.votes + option.dislikes;
+                      const likesPercentage = totalOptionVotes > 0 ? ((option.votes / totalOptionVotes) * 100).toFixed(1) : 0;
+                      const dislikesPercentage = totalOptionVotes > 0 ? ((option.dislikes / totalOptionVotes) * 100).toFixed(1) : 0;
+                      const progressPercentage = poll.totalVotes > 0 ? (totalOptionVotes / poll.totalVotes) * 100 : 0;
                       return (
                         <div key={index} className="space-y-2">
                           <div className="flex justify-between items-center">
                             <span className="font-medium">{option.text}</span>
                             <div className="flex gap-3 text-sm">
-                              <span className="text-emerald-600 font-medium">👍 {option.votes}</span>
-                              <span className="text-rose-600 font-medium">👎 {option.dislikes}</span>
+                              <span className="text-emerald-600 font-medium">👍 {option.votes} ({likesPercentage}%)</span>
+                              <span className="text-rose-600 font-medium">👎 {option.dislikes} ({dislikesPercentage}%)</span>
                             </div>
                           </div>
                           <div className="flex gap-2 items-center">
@@ -228,7 +231,7 @@ const Index = () => {
                               <div 
                                 className="absolute h-full transition-all duration-300"
                                 style={{
-                                  width: `${percentage}%`,
+                                  width: `${progressPercentage}%`,
                                   background: userVotes[`${poll.id}-${index}`] === 'like' 
                                     ? '#10b981' 
                                     : userVotes[`${poll.id}-${index}`] === 'dislike' 
