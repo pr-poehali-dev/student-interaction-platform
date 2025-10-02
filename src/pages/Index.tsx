@@ -112,7 +112,7 @@ const Index = () => {
               <img 
                 src="https://cdn.poehali.dev/files/55ad8279-97c3-41a8-b8d3-c5dfed336cac.jpg" 
                 alt="Совет Обучающихся"
-                className="w-16 h-16 object-contain"
+                className="w-20 h-20 object-contain"
               />
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent">
@@ -380,9 +380,22 @@ const Index = () => {
         </section>
       </main>
 
-      <footer className="mt-16 bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-gray-400">© 2025 Совет обучающихся. Вместе создаём лучшее будущее</p>
+      <footer className="mt-16 bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <img 
+                src="https://cdn.poehali.dev/files/55ad8279-97c3-41a8-b8d3-c5dfed336cac.jpg" 
+                alt="Совет Обучающихся"
+                className="w-16 h-16 object-contain"
+              />
+              <div>
+                <p className="font-bold text-lg">Совет Обучающихся</p>
+                <p className="text-gray-400 text-sm">Твой голос имеет значение</p>
+              </div>
+            </div>
+            <p className="text-gray-400">© 2025 Совет обучающихся. Вместе создаём лучшее будущее</p>
+          </div>
         </div>
       </footer>
     </div>
