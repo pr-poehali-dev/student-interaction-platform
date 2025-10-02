@@ -11,7 +11,7 @@ import Icon from '@/components/ui/icon';
 interface Poll {
   id: number;
   question: string;
-  options: { text: string; votes: number }[];
+  options: { text: string; votes: number; dislikes: number }[];
   totalVotes: number;
 }
 
@@ -38,10 +38,10 @@ const Index = () => {
       id: 1,
       question: 'Какое мероприятие провести в следующем месяце?',
       options: [
-        { text: 'Спортивный турнир', votes: 45 },
-        { text: 'Творческий конкурс', votes: 32 },
-        { text: 'Научная конференция', votes: 28 },
-        { text: 'Концерт', votes: 51 }
+        { text: 'Спортивный турнир', votes: 45, dislikes: 5 },
+        { text: 'Творческий конкурс', votes: 32, dislikes: 8 },
+        { text: 'Научная конференция', votes: 28, dislikes: 12 },
+        { text: 'Концерт', votes: 51, dislikes: 3 }
       ],
       totalVotes: 156
     },
@@ -49,13 +49,14 @@ const Index = () => {
       id: 2,
       question: 'Улучшение условий в столовой',
       options: [
-        { text: 'Расширить меню', votes: 67 },
-        { text: 'Увеличить время работы', votes: 43 },
-        { text: 'Добавить вегетарианские блюда', votes: 38 }
+        { text: 'Расширить меню', votes: 67, dislikes: 10 },
+        { text: 'Увеличить время работы', votes: 43, dislikes: 15 },
+        { text: 'Добавить вегетарианские блюда', votes: 38, dislikes: 20 }
       ],
       totalVotes: 148
     }
   ]);
+  const [userVotes, setUserVotes] = useState<{ [key: string]: 'like' | 'dislike' | null }>({});
 
   const [events] = useState<Event[]>([
     { id: 1, title: 'Собрание совета обучающихся', date: '2025-10-05', time: '15:00', location: 'Аудитория 301', type: 'meeting' },
@@ -70,19 +71,38 @@ const Index = () => {
     { id: 3, title: '500+ активных участников', description: 'Совет обучающихся объединил более 500 студентов', date: 'Октябрь 2025' }
   ]);
 
-  const handleVote = (pollId: number, optionIndex: number) => {
+  const handleVote = (pollId: number, optionIndex: number, type: 'like' | 'dislike') => {
+    const voteKey = `${pollId}-${optionIndex}`;
+    const currentVote = userVotes[voteKey];
+    
+    if (currentVote === type) return;
+    
     setPolls(polls.map(poll => {
       if (poll.id === pollId) {
         const newOptions = [...poll.options];
-        newOptions[optionIndex].votes += 1;
+        
+        if (currentVote === 'like') {
+          newOptions[optionIndex].votes -= 1;
+        } else if (currentVote === 'dislike') {
+          newOptions[optionIndex].dislikes -= 1;
+        }
+        
+        if (type === 'like') {
+          newOptions[optionIndex].votes += 1;
+        } else {
+          newOptions[optionIndex].dislikes += 1;
+        }
+        
         return {
           ...poll,
           options: newOptions,
-          totalVotes: poll.totalVotes + 1
+          totalVotes: poll.totalVotes
         };
       }
       return poll;
     }));
+    
+    setUserVotes({ ...userVotes, [voteKey]: type });
   };
 
   const getEventIcon = (type: string) => {
@@ -186,18 +206,31 @@ const Index = () => {
                         <div key={index} className="space-y-2">
                           <div className="flex justify-between items-center">
                             <span className="font-medium">{option.text}</span>
-                            <span className="text-sm text-muted-foreground">{option.votes} ({percentage.toFixed(0)}%)</span>
+                            <div className="flex gap-3 text-sm">
+                              <span className="text-emerald-600 font-medium">👍 {option.votes}</span>
+                              <span className="text-rose-600 font-medium">👎 {option.dislikes}</span>
+                            </div>
                           </div>
                           <div className="flex gap-2 items-center">
                             <Progress value={percentage} className="flex-1" />
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleVote(poll.id, index)}
-                              className="shrink-0"
-                            >
-                              <Icon name="ThumbsUp" size={16} />
-                            </Button>
+                            <div className="flex gap-1 shrink-0">
+                              <Button 
+                                size="sm" 
+                                variant={userVotes[`${poll.id}-${index}`] === 'like' ? 'default' : 'outline'}
+                                onClick={() => handleVote(poll.id, index, 'like')}
+                                className="px-2"
+                              >
+                                <Icon name="ThumbsUp" size={16} />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant={userVotes[`${poll.id}-${index}`] === 'dislike' ? 'destructive' : 'outline'}
+                                onClick={() => handleVote(poll.id, index, 'dislike')}
+                                className="px-2"
+                              >
+                                <Icon name="ThumbsDown" size={16} />
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       );
