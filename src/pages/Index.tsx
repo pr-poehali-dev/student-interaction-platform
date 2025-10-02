@@ -154,7 +154,7 @@ const Index = () => {
               </div>
             </div>
             <nav className="hidden md:flex gap-2">
-              {['Главная', 'Новости', 'Мероприятия', 'Голосования', 'Достижения', 'Контакты'].map((item) => (
+              {['Главная', 'Новости', 'Мероприятия', 'Голосования', 'Контакты'].map((item) => (
                 <Button 
                   key={item}
                   variant={activeTab === item.toLowerCase() ? 'default' : 'ghost'}
