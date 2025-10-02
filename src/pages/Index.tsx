@@ -294,7 +294,7 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-6">
             {achievements.map((achievement) => (
               <Card key={achievement.id} className="overflow-hidden border-2 hover:shadow-xl transition-all">
-                <div className="h-32 bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-400 flex items-center justify-center">
+                <div className="h-32 flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}>
                   <Icon name="Trophy" size={48} className="text-white" />
                 </div>
                 <CardHeader>
@@ -393,8 +393,8 @@ const Index = () => {
             <CardContent>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                    <Icon name="Phone" size={20} className="text-blue-600" />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}>
+                    <Icon name="Phone" size={20} className="text-white" />
                   </div>
                   <div>
                     <p className="font-semibold mb-1">Телефон</p>
@@ -402,8 +402,8 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center shrink-0">
-                    <Icon name="Mail" size={20} className="text-purple-600" />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}>
+                    <Icon name="Mail" size={20} className="text-white" />
                   </div>
                   <div>
                     <p className="font-semibold mb-1">Email</p>
@@ -411,8 +411,8 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                    <Icon name="MapPin" size={20} className="text-emerald-600" />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{background: 'linear-gradient(to bottom right, #c71432, #4b877b)'}}>
+                    <Icon name="MapPin" size={20} className="text-white" />
                   </div>
                   <div>
                     <p className="font-semibold mb-1">Адрес</p>
