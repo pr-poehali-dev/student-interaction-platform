@@ -71,6 +71,18 @@ const Index = () => {
     { id: 3, title: '500+ активных участников', description: 'Совет обучающихся объединил более 500 студентов', date: 'Октябрь 2025' }
   ]);
 
+  const handleSubmitFeedback = () => {
+    alert('Спасибо за отзыв! Ваше мнение важно для нас.');
+  };
+
+  const handleSubmitInitiative = () => {
+    alert('Инициатива отправлена! Мы рассмотрим ваше предложение.');
+  };
+
+  const handleSubmitQuestion = () => {
+    alert('Вопрос отправлен! Мы ответим вам на email.');
+  };
+
   const handleVote = (pollId: number, optionIndex: number, type: 'like' | 'dislike') => {
     const voteKey = `${pollId}-${optionIndex}`;
     const currentVote = userVotes[voteKey];
@@ -166,11 +178,11 @@ const Index = () => {
                 Присоединяйся к сообществу активных студентов. Предлагай идеи, голосуй за изменения и участвуй в жизни учебного заведения.
               </p>
               <div className="flex gap-4">
-                <Button size="lg" variant="secondary" className="bg-white text-purple-600 hover:bg-gray-100">
+                <Button size="lg" variant="secondary" className="bg-white text-purple-600 hover:bg-gray-100" onClick={() => setActiveTab('initiative')}>
                   <Icon name="Sparkles" className="mr-2" size={20} />
                   Подать инициативу
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20" onClick={() => alert('Контакты: +7 (996) 136-79-47, maksimenkov012@mail.ru')}>
                   О совете
                 </Button>
               </div>
@@ -329,7 +341,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600">
+                    <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600" onClick={handleSubmitFeedback}>
                       <Icon name="Send" size={16} className="mr-2" />
                       Отправить отзыв
                     </Button>
@@ -344,7 +356,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600">
+                    <Button className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600" onClick={handleSubmitInitiative}>
                       <Icon name="Sparkles" size={16} className="mr-2" />
                       Предложить инициативу
                     </Button>
@@ -359,7 +371,7 @@ const Index = () => {
                       rows={4}
                       className="mb-3"
                     />
-                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600">
+                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600" onClick={handleSubmitQuestion}>
                       <Icon name="Send" size={16} className="mr-2" />
                       Задать вопрос
                     </Button>
